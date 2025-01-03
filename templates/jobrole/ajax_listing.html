@@ -1,0 +1,22 @@
+{% load %}
+{% if context.object_list %}
+{% for group in context.object_list %}
+{% with status=group.status %}
+
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+    <span class="btn-checkbox">
+    <input type="checkbox" class="list_item" id="{{ group.id }}" name="cid[]" value="{{ group.id }}">
+    <label for="{{ group.id }}">&nbsp;</label>
+    </div>
+  </th> 
+<td>{{ group.name }} </td>
+<td>{{ group.description }}</td>
+<td>{{ group.created_at }}</td>
+<td>{% if perms.jobrole.change_jobroles %}<a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit" href="{% url 'jobrole:edit-jobrole'  group.id %}"><i class="ico edit-icon"></i></a> {% endif %}
+{% if perms.jobrole.delete_jobroles %}  <button data-url="{% url 'jobrole:delete-jobrole' %}" data-toggle="tooltip" class="btn btn-default delbtn" data-placement ="top" ><i class="ico trash-icon"></i></button>{% endif %}</td>
+</tr>
+{% endwith %}
+{% endfor %}
+{% endif %}

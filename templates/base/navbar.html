@@ -1,0 +1,249 @@
+{% load static %}
+
+{% url 'home' as home_url %}
+{% url 'dashboard' as dashboard_url %}
+{% url 'user:login' as login_url %}
+{% url 'logout' as logout_url %}
+{% url 'users:users' subdomain_slug as user_url %}
+{% url 'jobusers:jobusers' as job_user_url %}
+{% url 'users:change-password' as change_password %}
+{% url 'moderation:moderation' as moderation_url %}
+{% url 'userentity:userentity' as userentity_url %}
+{% url 'jobrole:jobrole' as jobrole_url %}
+{% url 'post:post' as post_url %}
+{% url 'polls:poll' as poll_url %}
+{% url 'postcategory:postcategory' as postcategory_url %}
+{% url 'quiz:quiz' as quiz_url %}
+{% url 'quiz:quiz-question-listing' as quiz_question_url %}
+{% url 'quiz:quiz-final-result-listing' as quiz_final_result_url %}
+{% url 'americanaStore:product' as product_url %}
+{% url 'americanaStore:userstore' as userstore_url %}
+{% url 'reports:reports' as reports_url %}
+{% url 'reports:inactive-users-listing' as reports_inactive_users_url %}
+{% url 'reports:inactive-employees-listing' as reports_inactive_employees_url %}
+{% url 'rewards:rewards' as rewards_url %}
+{% url 'rewards:points' as points_url %}
+{% url 'rewards:stores' as stores_url %}
+{% url 'pushnotification:pushnotification' as pushnotification_url %}
+
+{% load %}
+{# Side navbar #}
+
+<div class="left-side-menu">
+    <a href="{{ dashboard_url }}" class="navbar-brand dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown"><img src="{% if request.session.auth_user_logo %}{{ MEDIA_URL }}{{ request.session.auth_user_logo }}{% else %}{% static 'images/company-logo.png' %}{% endif %}" alt="Logo"></a>
+    <div class="dropdown-menu navdrop" aria-labelledby="dropdownMenuLink">
+        {% for key, val in all_brands.items %}
+           <a class="dropdown-item {% if key == request.session.auth_brand_id %}active{%else%}sel-enterp{%endif%}" data-atr="{{ key }}" href="javascript:void(0)">{{ val }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="h-100 simplebar-content-wrapper" id="left-side-menu-container">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a href="{{ dashboard_url }}" class="nav-link {% if request.path == dashboard_url %} active {% endif %}">
+                    <i class="ico dashboard-icon"></i>
+                    <span> Dashboard </span>
+                </a>
+            </li>
+            {% comment %}
+            {% if perms.moderation.view_moderation %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == moderation_url or 'moderation' in request.path %} active {% endif %}" href="{{ moderation_url }}">
+                    <i class="ico group-icon"></i>
+                    <span> Blacklisted words </span>
+                </a>
+            </li>
+            {% endif %}
+            {% endcomment %}
+            {% if perms.userentity.view_userentity %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == userentity_url or 'userentity' in request.path %} active {% endif %}" href="{{ userentity_url }}">
+                    <i class="ico group-icon"></i>
+                    <span> User Entities  </span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.jobusers.view_jobusers %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == job_user_url or 'jobuser' in request.path %} active {% endif %}" href="{{ job_user_url }}">
+                    <i class="ico group-icon"></i>
+                    <span> Job Users</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.jobrole.view_jobroles %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == jobrole_url or 'jobrole' in request.path %} active {% endif %}" href="{{ jobrole_url }}">
+                    <i class="ico group-icon"></i>
+                    <span> Job Roles</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.postcategory.view_postcategory %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == postcategory_url or 'postcategory' in request.path %} active {% endif %}" href="{{ postcategory_url }}">
+                    <i class="ico group-icon"></i>
+                    <span> Post Category </span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.post.view_posts %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == poll_url or 'postcs' in request.path %} active {% endif %}" href="{{ poll_url }}">
+                    <i class="ico group-icon"></i>
+                    <span> Polls </span>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.post.view_posts %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == post_url or 'postcs' in request.path %} active {% endif %}" href="{{ post_url }}">
+                    <i class="ico group-icon"></i>
+                    <span> Posts </span>
+                </a>
+            </li>
+            {% endif %}
+            {% comment %}
+            <li class="nav-item menu-collapsed">
+              <a href="#reportss" data-toggle="collapse" class="nav-link {% if request.path != reports_inactive_users_url and request.path != reports_url or 'reports' not in request.path %} collapsed {% else %} active{% endif %}" aria-expanded="{% if request.path != location_report_url or request.path != devices_report_url or 'reports' not in request.path %} true {% endif %}">
+                <i class="ico policy-icon"></i>
+                <span> Reports </span>
+              </a>
+              
+              <div id="reportss" class="collapse sidebar-submenu {% if request.path == reports_inactive_employees_url or request.path == reports_inactive_users_url or request.path == reports_url or 'reports'  in request.path %} show {% endif %}">
+                <a href="{{ reports_url }}" class="{% if request.path == reports_url %} active {% else %} inactive {% endif %} list-group-item">Post User Tracking</a>
+                <a href="{{ reports_inactive_employees_url }}" class="{% if request.path == reports_inactive_employees_url %} active {% endif %} list-group-item">Inactive Employees</a>
+                <a href="{{ reports_inactive_users_url }}" class="{% if request.path == reports_inactive_users_url %} active {% endif %} list-group-item">Inactive Users</a>
+                
+              </div>
+            </li>
+            {% endcomment %}
+            {% if perms.quiz.view_quizes or perms.quiz.view_quizquestions %}
+            <li class="nav-item menu-collapsed">
+              <a href="#quizs" data-toggle="collapse" class="nav-link {% if request.path != quiz_question_url and request.path != quiz_url or 'quiz' not in request.path %} collapsed {% else %} active {% endif %}" aria-expanded="{% if request.path != location_report_url or request.path != quiz_url or 'quiz' not in request.path %} true {% endif %}">
+                <i class="ico policy-icon"></i>
+                <span> Quizs </span>
+              </a>
+              
+              <div id="quizs" class="collapse sidebar-submenu {% if request.path == quiz_url or request.path == quiz_question_url or request.path == quiz_url or 'quiz'  in request.path %} show {% endif %}">
+              {% if perms.quiz.view_quizes %}
+                <a href="{{ quiz_url }}" class="{% if request.path == quiz_url %} active {% else %} inactive {% endif %} list-group-item">Quiz</a>
+              {% endif %}
+              {% if perms.quiz.view_quizquestions %}
+                <a href="{{ quiz_question_url }}" class="{% if request.path == quiz_question_url %} active {% endif %} list-group-item">Quiz Questions</a>
+              {% endif %}
+              {% if perms.quiz.view_quizresult %}
+                <a href="{{ quiz_final_result_url }}" class="{% if request.path == quiz_final_result_url %} active {% else %} inactive {% endif %} list-group-item">Quiz Results</a>
+              {% endif %}
+              </div>
+            </li>
+            {% endif %}
+
+            {% if perms.americanaStore.view_products %}
+            <li class="nav-item menu-collapsed">
+              <a href="#americanaStore" data-toggle="collapse" class="nav-link {% if request.path != product_url and request.path != product_url or 'americanaStore' not in request.path %} collapsed {% else %} active {% endif %}" aria-expanded="{% if request.path != location_report_url or request.path != product_url or 'americanaStore' not in request.path %} true {% endif %}">
+                <i class="ico policy-icon"></i>
+                <span> Americana Store </span>
+              </a>
+              
+              <div id="americanaStore" class="collapse sidebar-submenu {% if request.path == product_url  or 'americanaStore'  in request.path %} show {% endif %}">
+              {% if perms.americanaStore.view_products %}
+                <a href="{{ product_url }}" class="{% if request.path == product_url %} active {% else %} inactive {% endif %} list-group-item">Products</a>
+              {% endif %}
+              <div id="americanaStore" class="collapse sidebar-submenu {% if request.path == userstore_url  or 'americanaStore'  in request.path %} show {% endif %}">
+              {% if perms.americanaStore.view_products %}
+                <a href="{{ userstore_url }}" class="{% if request.path == userstore_url %} active {% else %} inactive {% endif %} list-group-item">User Redeems</a>
+              {% endif %}
+
+            {% endif %}
+
+            {% if perms.rewards.view_starofthemonth or perms.rewards.view_points %}
+            <li class="nav-item menu-collapsed">
+              <a href="#rewards" data-toggle="collapse" class="nav-link {% if request.path != rewards_url and request.path != points_url and request.path != stores_url or 'reward' not in request.path %} collapsed {% else %} active {% endif %}" aria-expanded="{% if request.path != rewards_url or request.path != points_url or request.path != stores_url or 'reward' not in request.path %} true {% endif %}">
+                <i class="ico policy-icon"></i>
+                <span> Rewards </span>
+              </a>
+              
+              <div id="rewards" class="collapse sidebar-submenu {% if request.path == rewards_url or request.path == points_url or 'reward' in request.path %} show {% endif %}">
+              {% if perms.rewards.view_starofthemonth %}
+                <a href="{{ rewards_url }}" class="{% if request.path == rewards_url or 'rewards' in request.path and 'points' not in request.path %} active {% else %} inactive {% endif %} list-group-item">Rewards</a>
+              {% endif %}
+              {% if perms.rewards.view_points %}
+                <a href="{{ points_url }}" class="{% if request.path == points_url or 'point' in request.path %} active {% endif %} list-group-item">Points</a>
+              {% endif %}
+              {% if perms.rewards.view_points %}
+                <a href="{{ stores_url }}" class="{% if request.path == stores_url or 'stores' in request.path and 'points' and 'rewards' not in request.path %} active {% endif %} list-group-item">Stores</a>
+              {% endif %}
+              </div>
+            </li>
+            {% endif %}
+            {% comment %}
+            {% if perms.pushNotification.view_pushnotification %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == pushnotification_url or 'pushnotification' in request.path %} active {% endif %}" href="{{ pushnotification_url }}">
+                    <i class="ico group-icon"></i>
+                    <span> Push Notification </span>
+                </a>
+            </li>
+            {% endif %}
+            {% endcomment %}
+            {% if perms.auth.view_group %}  
+<!--
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == role_url or 'roles' in request.path %} active {% endif %}" href="{{ role_url }}">
+                    <i class="ico role-icon"></i>
+                    <span> Roles </span>
+                </a>
+            </li>
+-->
+            {% endif %}
+            {% if perms.users.view_user %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == user_url or 'users' in request.path %} active {% endif %}" href="{{ user_url }}">
+                    <i class="ico user-icon"></i>
+                    <span> Users </span>
+                </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                 <a href="{{ change_password }}" class="nav-link">
+                    <i class="ico password-icon"></i>
+                    <span> Change Password </span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ logout_url }}" class="nav-link">
+                    <i class="ico logout-icon"></i>
+                    <span> Logout </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="footer-logo"><img src="{% static 'images/kfc-icon.png' %}" alt="Logo"></div>
+</div>
+
+<script>
+$(document).ready(function() {
+
+$('.sel-enterp').on('click', function() { 
+    var enterp = $(this).attr('data-atr'); 
+    if (enterp) {
+        $.ajax({
+            type: 'GET',
+             url: '{% url "users:select-enterprise" subdomain_slug %}',
+            data:'enterp='+enterp,
+            beforeSend: function () {
+                $('.loading-overlay').show();
+            },
+            success: function (response) {
+                $('.loading-overlay').fadeOut("slow");
+                if (response.success) { 
+                    window.location.href = response.redirect_url
+                }
+            }    
+        })
+    }    
+})
+})
+</script>
+

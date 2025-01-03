@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% load %}
+{% block content %}
+{% load app_filters %}
+<div class="navbar-custom navbar-light">   
+    <div class="app-search">
+      <div class="col-12 form-group">
+          <p>Edit Quiz</p>
+      </div>
+    </div>
+</div>
+<div class="containerfluid">
+   <div class="back-btn mt-3 mb-3"><a href="{% url 'quizresult:quizresult-ajax-listing' %}"><i class="ico back-icon"></i> Back</a></div>
+   <div class="devices-sec">
+      <div class="devices-content">
+        <div class="row">
+          <div class="col-xl-8">
+    
+            <form id="groupsubmitForm" method="POST" autocomplete="off" action="{% url 'quizresult:edit-quizresult' id %}">
+            <div id="msg-group"></div>
+               {% csrf_token %}
+              
+               <div id="right_pod">
+            
+               {% for field in form %}
+               <div class="col-12 form-group" id="{{ field.html_name }}-group">
+                     {{ field.errors }}
+                     {{ field.label_tag }} {{ field }}
+                     {% if field.help_text %}
+                     <p class="help">{{ field.help_text|safe }}</p>
+                     {% endif %}
+               </div>
+               {% endfor %}
+                    </div>
+                <div class="col-12 form-group">
+               <input type="submit" name="groups_submit" id="groups_submit" class="btn btn-lg btn-primary" value="Submit"/>
+                </div>
+            </form>
+          </div> 
+        </div> 
+      </div> 
+    </div>
+</div>
+{% endblock %}
+{% block additional_js %}
+<script type="text/javascript" src="{% static 'scripts/quiz/app.js' %}"></script>
+{% endblock additional_js %}

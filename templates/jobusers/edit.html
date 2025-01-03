@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="navbar-custom navbar-light">   
+    <div class="app-search">
+      <div class="col-12 form-group">
+          <p>Edit User</p>
+      </div>
+    </div>
+</div>
+<div class="containerfluid">
+   <div class="back-btn mt-3 mb-3"><a href="{% url 'jobusers:jobusers' %}"><i class="ico back-icon"></i> Back</a></div>
+   <div class="devices-sec">
+      <div class="devices-content">
+        <div class="row">
+          <div class="col-xl-8">
+    
+            <form id="usersubmitForm" method="POST" action="{% url 'jobusers:edit-job-user' id %}" autocomplete="off">
+               <div id="msg-group"></div>
+               {% csrf_token %}
+               <input type="hidden" name="user" value="{{ id }}">
+               <input type="hidden" name="filename" value="{{ logo }}">
+               
+               {% for field in form %}
+               
+               {% if field.name != 'user' and field.name != 'filename' and field.name != 'enterprise_logo' %}
+               <div class="row">
+               <div class="col-12 form-group" id="{{ field.html_name }}-group">
+                     {{ field.errors }}
+                     {{ field.label_tag }} {{ field }}
+                     {% if field.help_text %}
+                     <small class="help">{{ field.help_text|safe }}</small>
+                     {% endif %}
+               </div>
+               </div>
+               {% endif %}
+               {% endfor %}
+               <div class="row col-12 form-group">
+                 <input type="submit" name="user_submit" id="user_submit" class="btn btn-lg btn-primary" value="Update"/>
+               </div> 
+            </form>
+          </div> 
+        </div> 
+      </div> 
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_js %}
+<script src='{% static "scripts/users/app.js" %}'></script>
+{% endblock additional_js %}

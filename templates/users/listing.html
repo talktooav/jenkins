@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="navbar-custom navbar-light">   
+  <div class="app-search">     
+    <form class="d-flex align-items-center" id="SearchForm" action="{% url 'users:user-ajax-view' subdomain_slug %}" autocomplete="off" onsubmit="return fnValidate()"> 
+      {% csrf_token %}
+        <p>All Users</p>
+          <div class="search-form">
+            <input type="text" class="form-control" id="keywords" placeholder="Search User by name" value="" onkeyup="searchFilter()">
+            <span class="fa fa-search"></span>
+          </div>
+        <div class="custom-navbar ml-auto">
+          <ul class="list-unstyled device-nav clearfix">
+            <li><button type="button" name="close" class="btn cross-icon">
+                <span class="totals"></span></button></li>
+            <li><button type="button" name="rest" class="btn refresh-icon"><i class="ico refresh-ico"></i></button></li>
+            {% if perms.users.add_user %}
+            <li> <a href="{% url 'users:add-user' subdomain_slug %}" class="btn add-device"><i class="ico plus-ico"></i>Add New</a></li>
+            {% endif %}
+          </ul>
+        </div>
+    </form> 
+    {% comment %}
+    <button data-toggle="tooltip" class="btn btn-default delbtnselect" data-placement ="top" ><i class="ico trash-icon"></i></button>
+    {% endcomment %}
+  </div>
+</div>
+  
+<div class="container-fluid">
+    <div class="devices-sec">
+      <div class="devices-content">
+        <div class="d-flex align-items-start">
+          <div class="table-content full-width">
+            <div class="table-responsive">
+              <table class="table table-hover" id="list_view">
+                <thead>
+                  <tr>
+                    <th width="5%" scope="col">
+                      <div class="btn-checkbox">
+                          <input type="checkbox" id="checkall-toggle" name="checkall-toggle"> 
+                          <label for="checkall-toggle"></label>
+                      </div>
+                    </th>
+                    <th width="15%" scope="col">Name</th>
+                    <th width="15%" scope="col">Email Id</th>
+                    <th width="15%" scope="col">Phone</th>
+                    <th width="15%" scope="col">Role</th>
+                    <th width="15%" scope="col">CreatedAt</th>        
+                    <th width="15%" scope="col">Action</th>               
+                  </tr>
+               </thead>
+
+                  <tbody>
+                   
+                  </tbody>                
+              </table>
+            </div>
+           <div id="pagination_view"></div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block additional_js %}
+<script type="text/javascript" src="{% static 'scripts/users/app-list.js' %}"></script>
+<script>
+    
+ $('.content').on('click', '.delbtn', function() {
+     
+    var unchecked =  $('input.list_item:checked').attr('checked', false);
+    var mapped = $(this).closest('tr').children('th:first').find('input:checkbox').prop('checked', true);
+    
+    var seln_count = $('input.list_item:checked').length;
+    if (seln_count==0)
+        alert('select records to delete!');
+    else
+    { 
+      var btn = $(this);
+
+      var ids = []; 
+      $("input.list_item:checked").each(function() { 
+          ids.push($(this).val()); 
+      }); 
+      $.ajax({
+        url:"{{request.path}}delete",
+        type: 'get',
+        dataType: 'json',
+        success : function (data) {
+            $("#modal").modal("show");
+           $("#modal .modal-content").html(data.html)
+          
+        }
+      });
+      
+    }
+    
+  });
+  $('.content').on('click', '.delbtnselect', function() {
+     
+
+    var mapped = $(this).closest('tr').children('th:first').find('input:checkbox')
+    
+    var seln_count = $('input.list_item:checked').length;
+    if (seln_count==0)
+        alert('select records to delete!');
+    else
+    { 
+      var btn = $(this);
+
+      var ids = []; 
+      $("input.list_item:checked").each(function() { 
+          ids.push($(this).val()); 
+      }); 
+      $.ajax({
+        url:"{{request.path}}delete",
+        type: 'get',
+        dataType: 'json',
+        success : function (data) {
+            $("#modal").modal("show");
+           $("#modal .modal-content").html(data.html)
+          
+        }
+      });
+      
+    }
+    
+  });
+</script>
+
+{% endblock additional_js %}

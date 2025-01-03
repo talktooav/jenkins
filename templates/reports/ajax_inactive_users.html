@@ -1,0 +1,27 @@
+{% if context.object_list %}
+{% load app_filters %}
+
+{% for group in context.object_list %}
+{% with status=group.status %}
+
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+    <span class="btn-checkbox">
+    <input type="checkbox" class="list_item" id="{{ group.id }}" name="cid[]" value="{{ group.id }}">
+    <label for="{{ group.id }}">&nbsp;</label>
+    </div>
+  </th> 
+<td>{{ group.employee_name }}</td>
+<!-- <td>{{ group.last_name }}</td> -->
+<!-- <td>{{ group.phone }}</td> -->
+<!-- <td>{{ group.email }}</td> -->
+<td>{{ group.employee_code   }}</td>
+<td>{{ group.date_of_birth  }}</td>
+<td>{{ group.created_at }}</td>
+
+
+</tr>
+{% endwith %}
+{% endfor %}
+{% endif %}

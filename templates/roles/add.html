@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% load app_filters %}
+<div class="navbar-custom navbar-light">
+    <div class="app-search">
+      <p>Add Role</p>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="devices-sec">
+        <div class="devices-content">
+            <div class="row">
+                <div class="col-xl-8">
+                    <form id="roleSubmitForm" method="post" action="{% url 'roles:add-role' %}" autocomplete="off">
+                        <div id="msg-group"></div>  
+                        <div class="row">
+                            {% csrf_token %}
+                            <div class="col-md-6 form-group" id="name-group">
+                                <label for="id_name">Role Name:</label>
+                                <div class="input-group">
+                                    <input type="text" id="id_name" name="name" maxlength="50" minlength="2" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mt-3 mb-5">
+                            <div class="btn-select">
+                                <div class="btn-checkbox">
+                                    <input type="checkbox" id="all" name="check-all">
+                                    <label for="all">Select All </label>
+                                </div>
+                            </div>
+                        </div>
+                        <label>Role Permissions:</label>
+                        <div class="row">
+                            {% if permss %}
+                            {% for key, perms_values in permss.items %}
+                            <div class="col-md-6">
+                                <div class="role-checkbox">                                    
+                                    <header>
+                                      <div class="checkbox btn-checkbox">
+                                        <input type="checkbox" name="" id="{{ key }}" class="parent" value="">
+                                        <label for="{{ key }}">{{ '_'|replace_tag:key|title }}</label>
+                                      </div>
+                                    </header>
+                                    <div class="form-inline">
+                                        {% for perm_id, permissions in perms_values.items %}
+                                        <div class="btn-checkbox">
+                                            <input type="checkbox" name="permissions[]" class="child" id="permissions{{ perm_id }}" value="{{ perm_id }}">
+                                            <label for="permissions{{ perm_id }}">{{ permissions.name|title }}</label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            <div class="col-12 form-group">
+                                <button type="submit" id="role_submit" class="btn btn-lg btn-primary">Submit</button>
+                        </div>
+                        </div>
+                    </form>
+                    
+                </div>
+                <div class="col-xl-4">
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_js %}
+<script type="text/javascript" src="{% static 'scripts/roles/app.js' %}"></script>
+{% endblock additional_js %}

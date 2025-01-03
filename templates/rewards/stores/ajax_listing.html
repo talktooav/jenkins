@@ -1,0 +1,24 @@
+{% load %}
+{% if context.object_list %}
+{% for group in context.object_list %}
+{% with status=group.status %}
+
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+    <span class="btn-checkbox">
+    <input type="checkbox" class="list_item" id="{{ group.id }}" name="cid[]" value="{{ group.id }}">
+    <label for="{{ group.id }}">&nbsp;</label>
+    </div>
+  </th> 
+<td>{{ group.name }} </td>
+<td>{{ group.store_id }}</td>
+<td>{{ group.createdAt }}</td>
+<!--
+<td>{% if perms.account.change_moderation %}<a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit" href="{% url 'rewards:edit-rewards'  group.id %}"><i class="ico edit-icon"></i></a> {% endif %}
+{% if perms.account.delete_moderation %}  <button data-url="{% url 'rewards:delete-rewards' %}" data-toggle="tooltip" class="btn btn-default delbtn" data-placement ="top" ><i class="ico trash-icon"></i></button>{% endif %}</td>
+-->
+</tr>
+{% endwith %}
+{% endfor %}
+{% endif %}

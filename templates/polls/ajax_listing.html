@@ -1,0 +1,27 @@
+{% if context.object_list %}
+{% load app_filters %}
+{% for group in context.object_list %}
+
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+    <span class="btn-checkbox">
+    <input type="checkbox" class="list_item" id="{{ forloop.counter }}" name="cid[]" value="{{ group.id|to_encrypt }}">
+    <label for="{{ forloop.counter }}">&nbsp;</label>
+    </div>
+  </th> 
+  <td>{{ group.title }} </td>
+  <td>{{ group.description }}</td>
+  <td>{% if group.reactions %}{{ group.reactions|show_options }}{% endif %}</td>
+  <td>
+    {% if perms.post.change_posts %}
+       <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit" href="{% url 'polls:edit-poll'  group.id|to_encrypt %}"><i class="ico edit-icon"></i></a> 
+    {% endif %}
+    {% if perms.post.delete_posts %}
+       <button data-url="{% url 'post:delete-post' %}" data-toggle="tooltip" class="btn btn-default delbtn" data-placement ="top" ><i class="ico trash-icon"></i></button>
+    {% endif %}
+  </td>
+</tr>
+
+{% endfor %}
+{% endif %}

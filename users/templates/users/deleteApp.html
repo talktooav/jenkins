@@ -1,0 +1,22 @@
+{% block delete_partial %}
+  <form  method="POST"  action="{{ request.path }}" class="js-save-list">
+    {% csrf_token %}
+    <div class="modal-header">
+      <h4 class="modal-title">{% if context %}{% else %}Confirm  deletion {% endif %}</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <p class="lead">{% if context %}{% for i,j in context.items %} {{j}} {% endfor %}  {% else %}Are you sure you want to delete?{% endif %}</p>
+    </div>
+    {% if context  %}{% else %}
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </div>
+    {% endif %}
+  </form>
+
+{% endblock delete_partial %}

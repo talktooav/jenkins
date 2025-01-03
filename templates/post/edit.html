@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+{% load %}
+{% block content %}
+<div class="navbar-custom navbar-light">   
+    <div class="app-search">
+      <div class="col-12 form-group">
+          <p>Edit Post</p>
+      </div>
+    </div>
+</div>
+<div class="containerfluid">
+   <div class="back-btn mt-3 mb-3"><a href="{% url 'post:post' %}"><i class="ico back-icon"></i> Back</a></div>
+   <div class="devices-sec">
+      <div class="devices-content">
+        <div class="row">
+          <div class="col-xl-8">
+    
+            <form id="postSubmitForm" method="POST" autocomplete="off" action="{% url 'post:edit-post' id %}">
+            <!--<input type= "hidden" id="tagUserData" value="{{taggedusers}}">-->
+            <div id="msg-group"></div>
+               {% csrf_token %}
+               {% for field in form %}
+               {% if field.name != 'upldFile' and field.name != 'file_type' %}
+               <div class="col-12 form-group" id="{{ field.html_name }}-group">
+                     {{ field.errors }}
+                     {{ field.label_tag }} {{ field }}
+                     {% if field.help_text %}
+                     <p class="help">{{ field.help_text|safe }}</p>
+                     {% endif %}
+               </div>
+               {% endif %}
+               {% endfor %}
+                <div class="col-12 form-group">
+               <input type="submit" name="groups_submit" id="groups_submit" class="btn btn-lg btn-primary" value="Update"/>
+                </div>
+            </form>
+          </div> 
+        </div> 
+      </div> 
+    </div>
+</div>
+{% endblock %}
+{% block additional_js %}
+<script type="text/javascript" src="{% static 'scripts/post/app.js' %}"></script>
+{% endblock additional_js %}

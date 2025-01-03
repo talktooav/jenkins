@@ -1,0 +1,24 @@
+{% if context.object_list %}
+{% load app_filters %}
+
+{% for group in context.object_list %}
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+    <span class="btn-checkbox">
+    <input type="checkbox" class="list_item" id="{{ forloop.counter }}" name="cid[]" value="{{ group.id|to_encrypt }}">
+    <label for="{{ forloop.counter }}">&nbsp;</label>
+    </div>
+  </th> 
+<td>{% if group.title__english %} {{ group.title__english }} {% endif %} {% if group.title__arabic %} / {{ group.title__arabic }} {% endif %}</td>
+<td>{{ group.post_category__name }}</td>
+<td>{% if group.post_image %}<a target="_blank" href="{{ group.post_image.fileURL }}">Click here</a> {% endif %} {% if group.post_file %}<a target="_blank" href="{{ group.post_file.fileURL }}">Click here</a> {% endif %}</td>
+<td>{{ group.like_count }}</td>
+<td>{{ group.comment_count }}</td>
+<td>{{ group.approve_status|approve_status }}</td>
+<th width="15%" scope="col">{{ group.createdAt }}</th>
+<td>{% if perms.post.change_posts %}<a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit" href="{% url 'post:edit-post' group.id|to_encrypt %}"><i class="ico edit-icon"></i></a>{% endif %}
+{% if perms.post.delete_posts %}<button data-url="{% url 'post:delete-post' %}" data-toggle="tooltip" class="btn btn-default delbtn" data-placement ="top"><i class="ico trash-icon"></i></button>{% endif %}</td>
+</tr>
+{% endfor %}
+{% endif %}

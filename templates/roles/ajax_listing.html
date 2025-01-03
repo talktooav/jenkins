@@ -1,0 +1,26 @@
+{% if context.object_list %}
+{% load app_filters %}
+  {% for roles in context.object_list %}
+    {% with status=roles.status %}
+<tr>
+<th scope="row">
+<div class="btn-checkbox img-checkbox">
+    <input type="checkbox" name="cid[]" id="{{ forloop.counter }}" class="list_item" value="{{ roles.id|to_encrypt }}"> 
+    <label for="{{ forloop.counter }}">&nbsp;</label>
+</div>
+</th>
+<td><strong>{{ roles.name }}</strong></td>
+<td>{{ roles.createdAt }}</td>
+{% comment %}<td>{% if status %} <a href="javascript:void(0);">{{ STATUS|lookup:status }}</a> {% else %} <a href="javascript:void(0);">{{ STATUS|lookup:status }}</a> {% endif %}</td>
+{% endcomment %}
+<td>{% if roles.name != 'Admin' %}{% if perms.auth.change_group %}<a class="btn btn-default" href="{% url 'roles:edit-role' roles.id|to_encrypt %}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="ico edit-icon"></i></a> {% endif %} 
+{% if perms.auth.delete_group %}  
+<button data-toggle="tooltip" class="btn btn-default delBtn" data-url="{% url 'roles:role-delete'  %}" data-placement ="top" ><i class="ico trash-icon"></i></button>
+{% endif %}
+{% endif %}
+</td>
+</tr>
+{% endwith %}
+{% endfor %}
+{% endif %}
+                    

@@ -1,0 +1,13 @@
+{% if context.object_list %}
+{% load app_filters %}
+{% for quiz in context.object_list %}
+<tr>
+  <td>{{ quiz.quiz__name }}</td>
+  <td>{{ quiz.job_user__employee_code }}</td>
+  <td>{{ quiz.job_user__employee_name }}</td>
+  <td>{{ quiz.correct_questions }}</td>
+  <td>{{ quiz.attempted_questions }}</td>
+  <td>{{ quiz.totaltimetaken }}</td>
+</tr>
+{% endfor %}
+{% endif %}

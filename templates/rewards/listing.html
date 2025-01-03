@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="navbar-custom navbar-light">   
+  <div class="app-search">
+    <form class="d-flex align-items-center" id="SearchForm" autocomplete="off" action="{% url 'rewards:rewards-ajax-listing' %}" onsubmit="return fnValidate()">
+       {% csrf_token %}
+          <p>Rewards</p>
+            <div class="search-form">
+              <input type="text" class="form-control" id="keywords" placeholder="Search Word" value="" onkeyup="searchFilter()">
+              <span class="fa fa-search"></span>
+            </div>
+        <div class="custom-navbar ml-auto">
+          <ul class="list-unstyled device-nav clearfix">
+            <li><button type="button" name="close" class="btn cross-icon">
+                <i class="ico cross-ico"></i>
+                <span class="totals"></span></button></li>
+            <li><button type="button" name="rest" class="btn refresh-icon"><i class="ico refresh-ico"></i></button></li>
+            {% if perms.rewards.add_starofthemonth %}
+               <li><a href="{% url 'rewards:add-rewards' %}" class="btn add-device js-load-form"><i class="ico plus-ico"></i>Add New</a></li>
+            {% endif %}
+          </ul>
+        </div>
+    </form>
+  </div>
+</div>
+ <div class="containerfluid">
+     <div id ="del-msg-group"></div>
+  <div class="back-btn mt-3 mb-3"><a href="{% url 'dashboard' %}"><i class="ico back-icon"></i> Back</a></div>
+  <div class="page-title-box pt-4 pb-4">
+    {% comment %}
+        <h2 class="page-title">User</h2>
+    {% endcomment %}
+  </div>
+
+    <div class="devices-sec">
+      <div class="devices-content">
+        <div class="d-flex align-items-start">
+          <div class="table-content full-width">
+            <div class="table-responsive">
+              <table class="table table-hover" id="list_view">
+                <thead>
+                  <tr>
+                    <th width="5%" scope="col">
+                      <div class="btn-checkbox">
+                          <input type="checkbox" id="checkall-toggle" name="checkall-toggle"> 
+                          <label for="checkall-toggle"></label>
+                      </div>
+                    </th>
+                    <th width="15%" scope="col">Title</th>
+                    <th width="15%" scope="col">Employee Code</th>
+                    <th width="15%" scope="col">Employee Name</th>
+                    <th width="15%" scope="col">Store Name</th>
+                    <th width="15%" scope="col">Store Id</th>
+<!--
+                    <th width="15%" scope="col">Enterprise</th>
+-->
+<!--
+                    <th width="15%" scope="col">CreatedAt</th>        
+-->
+<!--
+                    <th width="15%" scope="col">Action</th>
+-->
+                  </tr>
+               </thead>
+
+                  <tbody>
+                   
+                  </tbody>                
+              </table>
+            </div>
+           <div id="pagination_view"></div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block additional_js %}
+<script type="text/javascript" src="{% static 'scripts/rewards/app-list.js' %}"></script>
+<script>
+    
+ $('.content').on('click', '.delbtn', function() {
+     
+    var unchecked =  $('input.list_item:checked').attr('checked', false);
+    var mapped = $(this).closest('tr').children('th:first').find('input:checkbox').prop('checked', true);
+    
+    var seln_count = $('input.list_item:checked').length;
+    if (seln_count==0)
+        alert('select records to delete!');
+    else
+    { 
+      var btn = $(this);
+
+      var ids = []; 
+      $("input.list_item:checked").each(function() { 
+          ids.push($(this).val()); 
+      }); 
+      $.ajax({
+        url:"{{request.path}}delete",
+        type: 'get',
+        dataType: 'json',
+        success : function (data) {
+            $("#modal").modal("show");
+            $("#modal .modal-content").html(data.html)
+          
+        }
+      });
+      
+    }
+    
+  });
+  
+  var DeleteFormlist = function() {
+    //~ alert("545454");
+    //~ return false;
+    var form = $(this);
+    $(this).find('.btn-danger').attr('disabled', true);
+    var seln_count = $('input.list_item:checked').length;
+    if (seln_count==0)
+       alert('select records to delete!');
+    else {
+      var btn = $(this);
+      var ids = [];
+      
+      $("input.list_item:checked").each(function() { 
+          ids.push($(this).val()); 
+      });
+    $.ajax({
+       url: form.attr("action"),
+       data: {'ids':ids},
+       type: 'POST',
+       dataType: 'json',
+       success: function (response) {
+         if (response.success) {
+            
+            $('#del-msg-group').html('<div class="alert alert-success text-success">'+response.msg+'</div>');
+            setTimeout(function() {
+              $("#modal").modal("hide");
+              window.location.href = '';
+              //~ searchFilter();
+            }, 3000);
+            
+         }
+         else {
+           $('#del-msg-group').html('<div class="alert alert-danger text-danger error">'+response.msg+'</div>');
+          
+           setTimeout(function() {
+              $("#modal").modal("hide");
+              window.location.href = '';
+              //~ searchFilter();
+           }, 3000);
+         }
+       }
+    });
+    return false;
+  }
+}
+
+$("body").on('submit', '#confirmDelete', DeleteFormlist);
+
+
+  //~ $('.content').on('click', '.delbtnselect', function() {
+     
+
+    //~ var mapped = $(this).closest('tr').children('th:first').find('input:checkbox')
+    
+    //~ var seln_count = $('input.list_item:checked').length;
+    //~ if (seln_count==0)
+        //~ alert('select records to delete!');
+    //~ else
+    //~ { 
+      //~ var btn = $(this);
+
+      //~ var ids = []; 
+      //~ $("input.list_item:checked").each(function() { 
+          //~ ids.push($(this).val()); 
+      //~ }); 
+      //~ $.ajax({
+        //~ url:"{{request.path}}delete",
+        //~ type: 'get',
+        //~ dataType: 'json',
+        //~ success : function (data) {
+            //~ $("#modal").modal("show");
+           //~ $("#modal .modal-content").html(data.html)
+          
+        //~ }
+      //~ });
+      
+    //~ }
+    
+  //~ });
+</script>
+
+{% endblock additional_js %}
+

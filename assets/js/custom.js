@@ -1,0 +1,3 @@
+function fnValidate(){
+   return false;
+}

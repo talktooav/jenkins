@@ -1,0 +1,20 @@
+{% if context.object_list %}
+{% load app_filters %}
+{% for userStore in context.object_list %}
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+      <span class="btn-checkbox">
+        <input type="checkbox" id="{{ userStore.id}}" class="list_item" name="cid[]" value="{{ userStore.id|to_encrypt }}">
+        <label for="{{ userStore.id}}">&nbsp;</label>
+      </span>
+    </div>
+  </th> 
+  <td>{{ userStore.user__employee_name }}</td>
+  <td>{{ userStore.user__employee_code }}</td>
+  <td>{{ userStore.product__name }}</td>
+  <!-- <td>{% if group.product__product_image %}<a target="_blank" href="{{ group.product__product_image.fileURL }}">Click here</a> {% endif %}</td> -->
+  <td>{{ userStore.boughtAt }}</td>
+</tr>
+{% endfor %}
+{% endif %}

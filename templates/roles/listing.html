@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block content %}
+<div class="navbar-custom navbar-light">
+<div class="app-search">
+    <form method="POST" id="SearchForm" action="{% url 'roles:ajax-roles-list' %}" class="d-flex align-items-center" autocomplete="off">
+        {% csrf_token %}
+        <p>All Roles</p>
+        <div class="search-form">
+            <input type="text" class="form-control" id="keywords" placeholder="Search Role By Name" value="" onkeyup="searchFilter()">
+            <span class="fa fa-search"></span>
+        </div>
+        <div class="custom-navbar ml-auto">
+            <ul class="list-unstyled device-nav clearfix">
+                <li><button type="button" name="close" class="btn cross-icon"><i class="ico cross-ico"></i> <span class="totals"></span></button></li>
+                <li><button type="button" name="rest" class="btn refresh-icon"><i class="ico refresh-ico"></i></button></li>
+                {% if perms.auth.add_group %}
+                <li><a href="{% url 'roles:add-role' %}" class="btn add-device"><i class="ico plus-ico"></i> Add a Role</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </form>
+</div>
+</div>
+<div class="containerfluid">
+    <div class="devices-sec">
+    <div class="devices-content">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="list_view">
+                    <thead>
+                    <tr>
+                    <th width="5%" scope="col">
+                    <div class="btn-checkbox">
+                        <input type="checkbox" name="checkall-toggle" id="checkall-toggle"> 
+                        <label for="checkall-toggle"></label>
+                    </div>
+                    </th>
+                    <th width="30%" scope="col">Name 
+                    <!--<a href="javascript:void();"><img src="{% static 'images/up-arrow.png' %}" alt=""></a>-->
+                    </th>
+                    <th width="20%" scope="col">CreatedAt</th>
+                    <th width="20%" scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                    </table>
+                    {% comment %}{% if perms.file_store.delete_file_store %} 
+                       <button class="btn btn-lg btn-primary allDel" data-url="{% url 'roles:role-delete' subdomain_slug %}" id="allDel">All Delete</button>
+                    {% endif %}
+                    {% endcomment %}
+                </div>
+                <div id="pagination_view"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+{% endblock %}
+
+{% block additional_js %}
+<script type="text/javascript" src="{% static 'scripts/roles/app-list.js' %}"></script>
+{% endblock %}

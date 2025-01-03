@@ -1,0 +1,28 @@
+{% if context.object_list %}
+{% load app_filters %}
+{% for quizresult in context.object_list %}
+
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+      <span class="btn-checkbox">
+        <input type="checkbox" id="{{ quizresult.id}}" class="list_item" name="cid[]" value="{{ quizresult.id|to_encrypt }}">
+        <label for="{{ quizresult.id}}">&nbsp;</label>
+      </span>
+    </div>
+  </th>
+  <td>{{ quizresult.job_user__employee_name }}</td>
+  <td>{{ quizresult.job_user_id }}</td>
+  <td>{{ quizresult.quiz__name }}</td>
+  <td>{{ quizresult.quiz__start_date }}</td>
+  <td>{{ quizresult.quiz__end_date }}</td>
+  <td>{{ quizresult.quiz__result_date }}</td>
+  <td>
+  
+   {% if perms.quiz.delete_quiz %}  
+      <button data-url="{% url 'quiz:delete-quiz' %}" data-toggle="tooltip" class="btn btn-default delBtn" data-placement ="top" ><i class="ico trash-icon"></i></button>
+   {% endif %}
+ </td>
+</tr>
+{% endfor %}
+{% endif %}

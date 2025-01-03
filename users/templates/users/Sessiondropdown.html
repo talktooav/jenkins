@@ -1,0 +1,25 @@
+{% load cms1 %}
+
+{% block delete_partial %}
+<form  method="POST"  action="{{ request.path }}">
+  {% csrf_token %}
+  <div class="modal-header">
+    <p1>Choose select one</p1>
+  </div>
+  
+  <div class="modal-body">
+    <select id=myselect1 name = "drop1">
+    {% for key, value in dic.items %}
+      <option value="{{key}}">{{value}}</option>
+      {% endfor %}
+  </select>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-danger">Select</button>
+  </div>
+</form>
+
+{% endblock delete_partial %}
+
+
+

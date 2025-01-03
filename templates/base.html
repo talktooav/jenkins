@@ -1,0 +1,47 @@
+{% include 'base/header.html' %}
+{#  top navbar  #}
+<body>
+<div class="wrapper">
+  {% include 'base/navbar.html' with brand_name='AMERICANA' %}
+  <div class="content-page{% if 'dashboard' in request.path %} dashboard-sec{% endif %}">
+    <div class="content">
+        <div class="loading-overlay" style="display:none;"><div class="overlay-content">Loading...</div></div>
+        {% if messages %}
+          <div class="alert alert-success messages">
+              {% for message in messages %}
+              <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                  {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                  {{ message }}<br/>
+              </span>
+              {% endfor %}
+          </div>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </div>
+    {% include 'base/footer.html' %}
+  </div>
+<!-- Modal -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="mapped" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+{% include 'base/js.html' %}
+
+{% block additional_js %}
+
+{% endblock additional_js %}
+
+{% block javascript %}
+
+{% endblock %}
+
+</body>
+</html>
+  

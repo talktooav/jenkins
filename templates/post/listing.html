@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="navbar-custom navbar-light">   
+  <div class="app-search">
+    <form class="d-flex align-items-center" id="SearchForm" autocomplete="off" action="{% url 'post:post-ajax-listing' %}" onsubmit="return fnValidate()">
+       {% csrf_token %}
+          <p>Posts</p>
+            <div class="search-form">
+              <input type="text" class="form-control" id="keywords" placeholder="Search Post Title" value="" onkeyup="searchFilter()">
+              <span class="fa fa-search"></span>
+            </div>
+        <div class="custom-navbar ml-auto">
+          <ul class="list-unstyled device-nav clearfix">
+            <li><button type="button" name="close" class="btn cross-icon">
+                <i class="ico cross-ico"></i>
+                <span class="totals"></span></button></li>
+            <li><button type="button" name="rest" class="btn refresh-icon"><i class="ico refresh-ico"></i></button></li>
+
+            <li> <a href="{% url 'post:add-post' %}" class="btn add-device js-load-form"><i class="ico plus-ico"></i>Add New</a></li>
+
+          </ul>
+        </div>
+    </form>
+  </div>
+</div>
+ <div class="containerfluid">
+  <div class="back-btn mt-3 mb-3"><a href="{% url 'dashboard' %}"><i class="ico back-icon"></i> Back</a></div>
+  
+    <div class="devices-sec">
+      <div class="devices-content">
+        <div class="d-flex align-items-start">
+          <div class="table-content full-width">
+            <div class="table-responsive">
+              <table class="table table-hover" id="list_view">
+                <thead>
+                  <tr>
+                    <th width="5%" scope="col">
+                      <!--<div class="btn-checkbox">
+                          <input type="checkbox" id="checkall-toggle" name="checkall-toggle"> 
+                          <label for="checkall-toggle"></label>
+                      </div>-->
+                    </th>
+                    <th width="15%" scope="col">Title (English / Title)</th>
+                    <th width="15%" scope="col">Category</th>
+                    <th width="15%" scope="col">Image / Video</th>
+                    <th width="15%" scope="col">No. Of Like's</th>
+                    <th width="15%" scope="col">No. Of Comment's</th>
+                    <th width="15%" scope="col">Approve Status</th>
+                    <th width="15%" scope="col">CreatedAt</th>        
+                    <th width="15%" scope="col">Action</th>
+                  </tr>
+               </thead>
+               <tbody></tbody>                
+              </table>
+            </div>
+           <div id="pagination_view"></div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block additional_js %}
+<script type="text/javascript" src="{% static 'scripts/post/app-list.js' %}"></script>
+{% endblock additional_js %}
+

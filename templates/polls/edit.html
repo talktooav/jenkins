@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+{% load %}
+{% block content %}
+{% load app_filters %}
+<div class="navbar-custom navbar-light">   
+    <div class="app-search">
+      <div class="col-12 form-group">
+          <p>Edit Poll</p>
+      </div>
+    </div>
+</div>
+<div class="containerfluid">
+   <div class="back-btn mt-3 mb-3"><a href="{% url 'polls:poll' %}"><i class="ico back-icon"></i> Back</a></div>
+   <div class="devices-sec">
+      <div class="devices-content">
+        <div class="row">
+          <div class="col-xl-8">
+    
+            <form id="groupsubmitForm" method="POST" autocomplete="off" action="{% url 'polls:edit-poll' id %}">
+            <div id="msg-group"></div>
+               {% csrf_token %}
+              
+               <div id="right_pod">
+            
+               {% for field in form %}
+               <div class="row col-12 form-group" id="{{ field.html_name }}-group">
+                     {{ field.errors }}
+                     {{ field.label_tag }} {{ field }}
+                     {% if field.help_text %}
+                     <p class="help">{{ field.help_text|safe }}</p>
+                     {% endif %}
+               </div>
+               {% endfor %}
+               
+               <div class="row">
+                   {% with val=reactions|get_count %}
+                   {% with n=0 %}
+                   
+                    
+                 
+                    {% for dict in reactions %}
+                    
+                        <div class="col-6 form-group" id="title-group">
+                            <label for="id_title">Option</label> 
+                            <input type="text" name="label[{{forloop.counter0}}]" maxlength="50" minlength="2" value="{{ dict.label}}" class="form-control"  id="op{{forloop.counter0}}">
+                        </div>
+                      
+                     {% endfor %}
+                     
+                       
+                       {% for value in val|rangee %}
+                       <div class="col-6 form-group" id="title-group">
+                            <label for="id_title">Option</label> 
+                            <input type="text" name="label[{{value}}]" maxlength="50" minlength="2" value="" class="form-control"  id="op{{value}}">
+                        </div>
+                        {% endfor %}
+                       
+                       {% endwith%}
+                       {% endwith%}
+                    </div>
+                <div class="col-12 form-group">
+               <input type="submit" name="groups_submit" id="groups_submit" class="btn btn-lg btn-primary" value="Update"/>
+                </div>
+            </form>
+          </div> 
+        </div> 
+      </div> 
+    </div>
+</div>
+{% endblock %}
+{% block additional_js %}
+<script type="text/javascript" src="{% static 'scripts/polls/app.js' %}"></script>
+{% endblock additional_js %}

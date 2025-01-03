@@ -1,0 +1,27 @@
+{% if context.object_list %}
+{% load app_filters %}
+
+{% for group in context.object_list %}
+{% with status=group.status %}
+
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+    <span class="btn-checkbox">
+    <input type="checkbox" class="list_item" id="{{ group.id }}" name="cid[]" value="{{ group.id }}">
+    <label for="{{ group.id }}">&nbsp;</label>
+    </div>
+  </th> 
+<td>{{ group.title }} </td>
+<td>{{ group.description }}</td>
+<td>{{ group.user_id__email }}</td>
+<td>{{ group.job_role_id__name }}</td>
+<td>{{ group.link }}</td>
+<td>{{ group.schedule_date_time }}</td>
+<td>{{ group.sent_status|push_status }}</td>
+<td>{% if perms.account.change_moderation %}<a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit" href="{% url 'pushnotification:edit-pushnotification'  group.id %}"><i class="ico edit-icon"></i></a> {% endif %}
+{% if perms.account.pushnotification %}  <button data-url="{% url 'pushnotification:delete-pushnotification' %}" data-toggle="tooltip" class="btn btn-default delbtn" data-placement ="top" ><i class="ico trash-icon"></i></button>{% endif %}</td>
+</tr>
+{% endwith %}
+{% endfor %}
+{% endif %}

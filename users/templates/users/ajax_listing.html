@@ -1,0 +1,20 @@
+{% if context.object_list %}
+{% load app_filters %}
+{% for user in context.object_list %}
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+    <span class="btn-checkbox">
+        <input type="checkbox" id="{{ user.id}}" class="list_item" name="cid[]" value="{{ user.id|to_encrypt }}">
+        <label for="{{ user.id}}">&nbsp;</label>
+        </div>
+  </th> 
+    <td>{{ user.first_name }}</td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.groups__name }}</td>
+    <td>{{ user.createdAt }}</td>
+    <td>{% if perms.users.change_user %}<a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit" href="{% url 'users:edit-user-profile' subdomain_slug user.id|to_encrypt %}"><i class="ico edit-icon"></i></a> {% endif %}
+    {% if perms.user.delete_user %}  <buttons data-toggle="tooltip" class="btn btn-default delbtn" data-placement ="top" ><i class="ico trash-icon"></i></button>{% endif %}</td>
+</tr>
+{% endfor %}
+{% endif %}

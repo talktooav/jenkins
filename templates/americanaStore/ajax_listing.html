@@ -1,0 +1,25 @@
+{% if context.object_list %}
+{% load app_filters %}
+{% for product in context.object_list %}
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+      <span class="btn-checkbox">
+        <input type="checkbox" id="{{ product.id}}" class="list_item" name="cid[]" value="{{ product.id|to_encrypt }}">
+        <label for="{{ product.id}}">&nbsp;</label>
+      </span>
+    </div>
+  </th> 
+  <td>{{ product.name }}</td>
+  <td>{{ product.description }}</td>
+  <td>{{ product.price }}</td>
+  <td>{% if product.product_image %}<a target="_blank" href="{{ product.product_image.fileURL }}">Click here</a> {% endif %}</td>
+  <td>{{ product.createdAt }}</td>
+  <td>
+  {% if perms.product.change_product %}
+      <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit" href="{% url 'americanaStore:edit-product' product.id|to_encrypt %}"><i class="ico edit-icon"></i></a> 
+   {% endif %}
+ </td>
+</tr>
+{% endfor %}
+{% endif %}

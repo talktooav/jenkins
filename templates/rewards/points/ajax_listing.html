@@ -1,0 +1,21 @@
+{% if context.object_list %}
+{% load app_filters %}
+{% for group in context.object_list %}
+<tr>
+<th scope="row">
+  <div class="btn-checkbox">
+    <span class="btn-checkbox">
+    <input type="checkbox" class="list_item" id="{{ group.id|to_encrypt }}" name="cid[]" value="{{ group.id|to_encrypt }}">
+    <label for="{{ group.id }}">&nbsp;</label>
+  </div>
+</th> 
+<td>{{ group.title }} </td>
+<td>{{ group.points }}</td>
+<td>{{ group.createdAt }}</td>
+<td>{% comment %}{% if perms.rewards.change_points %}<a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit" href="{% url 'rewards:edit-points' group.id|to_encrypt %}"><i class="ico edit-icon"></i></a> {% endif %}
+{% if perms.rewards.delete_points %}  <button data-url="{% url 'rewards:delete-points' %}" data-toggle="tooltip" class="btn btn-default delbtn" data-placement ="top" ><i class="ico trash-icon"></i></button>{% endif %}{% endcomment %}
+</td>
+
+</tr>
+{% endfor %}
+{% endif %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="navbar-custom navbar-light">   
+  <div class="app-search">
+    <form class="d-flex align-items-center" id="SearchForm" autocomplete="off" action="{% url 'moderation:moderation-ajax-listing' %}" onsubmit="return fnValidate()">
+       {% csrf_token %}
+          <p>Moderation</p>
+            <div class="search-form">
+              <input type="text" class="form-control" id="keywords" placeholder="Search Word" value="" onkeyup="searchFilter()">
+              <span class="fa fa-search"></span>
+            </div>
+        <div class="custom-navbar ml-auto">
+          <ul class="list-unstyled device-nav clearfix">
+            <li><button type="button" name="close" class="btn cross-icon">
+                <i class="ico cross-ico"></i>
+                <span class="totals"></span></button></li>
+            <li><button type="button" name="rest" class="btn refresh-icon"><i class="ico refresh-ico"></i></button></li>
+            {% if perms.moderation.add_moderation %}
+            <li> <a href="{% url 'moderation:add-moderation' %}" class="btn add-device js-load-form"><i class="ico plus-ico"></i>Add New</a></li>
+            {% endif %}
+          </ul>
+        </div>
+    </form>
+  </div>
+</div>
+ <div class="containerfluid">
+  <div class="back-btn mt-3 mb-3"><a href="{% url 'dashboard' %}"><i class="ico back-icon"></i> Back</a></div>
+    <div class="devices-sec">
+      <div class="devices-content">
+        <div class="d-flex align-items-start">
+          <div class="table-content full-width">
+            <div class="table-responsive">
+              <table class="table table-hover" id="list_view">
+                <thead>
+                  <tr>
+                    <th width="5%" scope="col">
+                      <div class="btn-checkbox">
+                          <input type="checkbox" id="checkall-toggle" name="checkall-toggle"> 
+                          <label for="checkall-toggle"></label>
+                      </div>
+                    </th>
+                    <th width="15%" scope="col">Word</th>
+                    <th width="15%" scope="col">Description</th>
+                    <th width="15%" scope="col">Action</th>
+                  </tr>
+                </thead>
+              <tbody>
+                   
+                  </tbody>                
+              </table>
+            </div>
+           <div id="pagination_view"></div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block additional_js %}
+<script type="text/javascript" src="{% static 'scripts/moderation/app-list.js' %}"></script>
+{% endblock additional_js %}
+

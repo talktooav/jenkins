@@ -1,0 +1,45 @@
+{% if context.object_list %}
+{% load app_filters %}
+
+{% for group in context.object_list %}
+{% with status=group.status %}
+
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+    <span class="btn-checkbox">
+    <input type="checkbox" class="list_item" id="{{ group.id }}" name="cid[]" value="{{ group.id }}">
+    <label for="{{ group.id }}">&nbsp;</label>
+    </div>
+  </th> 
+<td>{{ group.title }}</td>
+<td>{{ group.description }}</td>
+<td>{{ group.post_type }}</td>
+<td>{{ group.user_id__email }}</td>
+<td>{{ group.post_category__name }}</td>
+<td>{% if group.post_image %}<img src="{{MEDIA_URL}}{{ group.post_image }}" alt  > {% endif %}</td>
+<td>{{ group.like_count }}</td>
+<td>{{ group.comment_count }}</td>
+<!--
+<td>{{ group.post_file }}</td>
+-->
+<!--
+<td>{{ group.file_type }}</td>
+-->
+<!--
+<td>{{ group.taggedusers }}</td>
+-->
+<!--
+<td>{{ group.like_count }}</td>
+-->
+<td><a href="{% url 'reports:get-postuserlist'  group.id %}">{{ group.total_count }}</a></td>
+<td>{{ group.approve_status|approve_status }}</td>
+<td>{{ group.status|status }}</td>
+<!--
+<td>{% if perms.account.change_moderation %}<a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit" href="{% url 'post:edit-post'  group.id %}"><i class="ico edit-icon"></i></a> {% endif %}
+{% if perms.account.post %}  <button data-url="{% url 'post:delete-post' %}" data-toggle="tooltip" class="btn btn-default delbtn" data-placement ="top" ><i class="ico trash-icon"></i></button>{% endif %}</td>
+-->
+</tr>
+{% endwith %}
+{% endfor %}
+{% endif %}

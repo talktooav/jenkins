@@ -1,0 +1,25 @@
+{% load app_filters %}
+{% if context.object_list %}
+{% for group in context.object_list %}
+
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+    <span class="btn-checkbox">
+    <input type="checkbox" class="list_item" id="{{ forloop.counter }}" name="cid[]" value="{{ group.id|to_encrypt }}">
+    <label for="{{ forloop.counter }}">&nbsp;</label>
+    </div>
+  </th>  
+  <td>{{ group.word }} </td>
+  <td>{{ group.description }}</td>
+  <td>
+      {% if perms.moderation.change_moderation %}
+         <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit" href="{% url 'moderation:edit-moderation' group.id|to_encrypt %}"><i class="ico edit-icon"></i></a> 
+      {% endif %}
+      {% if perms.moderation.delete_moderation %}  
+         <button data-url="{% url 'moderation:delete-moderation' %}" data-toggle="tooltip" class="btn btn-default delbtn" data-placement ="top" ><i class="ico trash-icon"></i></button>
+      {% endif %}
+  </td>
+</tr>
+{% endfor %}
+{% endif %}

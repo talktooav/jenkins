@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+{% load app_filters %}
+{% block content %}
+<div class="navbar-custom navbar-light">   
+    <div class="app-search">
+      <div class="col-12 form-group">
+          <p>Edit Quiz Question</p>
+      </div>
+    </div>
+</div>
+<div class="containerfluid">
+   <div class="back-btn mt-3 mb-3"><a href="{% url 'quiz:quiz-question-listing' %}"><i class="ico back-icon"></i> Back</a></div>
+    <div class="devices-sec">
+      <div class="devices-content">
+        <div class="row">
+          <div class="col-xl-8">
+            <form id="submitForm" method="quiz" action="{% url 'quiz:edit-quiz-question' id %}" enctype="multipart/form-data" autocomplete="off">
+              <div id="msg-group"></div>
+                {% csrf_token %}
+                <div class="row col-12 form-group" id="quiz-group">
+                  <label for="id_group">Quiz:</label> 
+                  <select name="quiz" class="form-control" placeholder="Select your quiz" id="id_quiz">
+                     <option value=""> --Select-- </option>
+                      {% if quizs %}
+                        {% for key, val in quizs %}
+                           <option value="{{ key|to_encrypt }}" {% if form.quiz.value == key %}selected {% endif %}>{{ val }}</option>
+                        {% endfor %}
+                      {% endif %}
+                  </select>
+                </div>
+                
+                {% for field in form %}
+                
+                {% if field.name == 'isimage' %}
+                <div class="row col-12">
+                  <div class="btn-radio single inline">
+                    <input type="radio" name="isimage" value="False" class="option-status" {% if form.isimage.value == False %} checked {% endif %} id="id_option_type_1">
+                    <label for="id_option_type_1">Option by text</label>
+                  </div>
+                  <div class="btn-radio single inline">
+                    <input type="radio" name="isimage" value="True" class="option-status" {% if form.isimage.value == True %} checked {% endif %} id="id_option_type_0">
+                    <label for="id_option_type_0">Option by image</label>
+                  </div>
+                </div>
+                {% endif %}
+                {% if field.name == 'optionAFile' %}
+                <div class="row">
+                <div class="col-8 form-group"  id="optionAFile-group" style="display:none;">
+                  <label for="id_optionAFile">OptionA</label><br/>
+                  <input type="file" name="optionAFile" id="id_optionAFile" class="inputfile inputfile-6" data-multiple-caption="{count} files selected">
+                  <label for="id_optionAFile"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg></strong></label>
+                  <small>The image size should be less than 20MB.</small><br/>
+                </div>
+                <div class="col-4">
+                  {% if form.optionA.value and form.isimage.value %}
+                      <img src="{{ form.optionA.value }}" class="img-responsive" style="width:70%; height:50%;">
+                  {% endif %}
+                </div>
+                </div>
+                {% endif %}
+                {% if field.name == 'optionBFile' %}
+                <div class="row">
+                <div class="col-8 form-group" id="optionBFile-group" style="display:none;">
+                  <label for="id_optionBFile">OptionB</label><br/>
+                  <input type="file" name="optionBFile" id="id_optionBFile" class="inputfile inputfile-6" data-multiple-caption="{count} files selected">
+                  <label for="id_optionBFile"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg></strong></label>
+                  <small>The image size should be less than 20MB.</small><br/>
+                </div>
+                <div class="col-4">
+                   {% if form.optionB.value and form.isimage.value %}
+                      <img src="{{ form.optionB.value }}" class="img-responsive" style="width:70%; height:50%;">
+                   {% endif %}
+                </div>
+                </div>
+                {% endif %}
+                {% if field.name == 'optionCFile' %}
+                <div class="row">
+                <div class="col-8 form-group" id="optionCFile-group" style="display:none;">
+                  <label for="id_optionCFile">OptionC</label><br/>
+                  <input type="file" name="optionCFile" id="id_optionCFile" class="inputfile inputfile-6" data-multiple-caption="{count} files selected">
+                  <label for="id_optionCFile"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg></strong></label>
+                  <small>The image size should be less than 20MB.</small><br/>
+                </div>
+                <div class="col-4">
+                   {% if form.optionC.value and form.isimage.value %}
+                      <img src="{{ form.optionC.value }}" class="img-responsive" style="width:70%; height:50%;">
+                   {% endif %}
+                </div>
+                </div>
+                {% endif %}
+                {% if field.name == 'optionDFile'  %}
+                <div class="row">
+                <div class="col-8 form-group" id="optionDFile-group" style="display:none;">
+                  <label for="id_optionDFile">OptionD</label><br/>
+                  <input type="file" name="optionDFile" id="id_optionDFile" class="inputfile inputfile-6" data-multiple-caption="{count} files selected">
+                  <label for="id_optionDFile"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg></strong></label>
+                  <small>The image size should be less than 20MB.</small><br/>
+                </div>
+                <div class="col-4">
+                   {% if form.optionD.value and form.isimage.value %}
+                      <img src="{{ form.optionD.value }}" class="img-responsive" style="width:70%; height:50%;">
+                   {% endif %}
+                </div>
+                </div>
+                {% endif %}
+                {% if field.name != 'quiz' and field.name != 'isimage' and field.name != 'optionAFile' and field.name != 'optionBFile' and field.name != 'optionCFile' and field.name != 'optionDFile' %}
+                <div class="row">
+                <div class="col-12 form-group" id="{{ field.html_name }}-group">
+                    {{ field.label_tag }} {{ field }}
+                    {% if field.help_text %}
+                    <p class="help">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                
+                <div class="col-12 form-group">
+                <input type="submit" name="groups_submit" id="groups_submit" class="btn btn-lg btn-primary" value="Submit"/>
+                </div>
+            </form>
+          </div> 
+        </div> 
+      </div> 
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_js %}
+<script type="text/javascript" src="{% static 'scripts/quiz/question-app.js' %}"></script>
+{% endblock additional_js %}
+

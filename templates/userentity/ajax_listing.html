@@ -1,0 +1,26 @@
+{% load app_filters %}
+{% if context.object_list %}
+{% for group in context.object_list %}
+
+<tr>
+  <th scope="row">
+    <div class="btn-checkbox">
+    <span class="btn-checkbox">
+    <input type="checkbox" class="list_item" id="{{ forloop.counter }}" name="cid[]" value="{{ group.id|to_encrypt }}">
+    <label for="{{ forloop.counter }}">&nbsp;</label>
+    </div>
+  </th> 
+  <td>{{ group.name }} </td>
+  <td>{{ group.description }}</td>
+  <td>{{ group.createdAt }}</td>
+  <td>
+    {% if perms.userentity.change_userentity %}
+      <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit" href="{% url 'userentity:edit-userentity' group.id|to_encrypt %}"><i class="ico edit-icon"></i></a> 
+    {% endif %}
+    {% if perms.userentity.delete_userentity %}  
+      <button data-url="{% url 'userentity:delete-userentity' %}" data-toggle="tooltip" class="btn btn-default delbtn" data-placement ="top" ><i class="ico trash-icon"></i></button>
+    {% endif %}
+  </td>
+</tr>
+{% endfor %}
+{% endif %}

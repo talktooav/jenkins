@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load app_filters %}
+<div class="navbar-custom navbar-light">
+    <div class="app-search">
+      <p>Role</p>
+    </div>
+</div>
+			
+<div class="containerfluid">
+    <div class="devices-sec">
+        <div class="devices-content">
+            <div class="row">
+                <div class="col-xl-8">
+                    <form id="roleSubmitForm" method="post">
+                        <div class="row">
+                            {% csrf_token %}
+                            <input type="hidden" name="role" value="{{ context.role_id }}">
+                            <div class="col-md-6 form-group" id="name-group">
+                                <label for="id_name">Role Name:</label>
+                                <div class="input-group">
+                                    <input type="text" id="id_name" name="name" maxlength="50" minlength="2" class="form-control" value="{{ context.name }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mt-3 mb-5">
+                            <div class="btn-select">
+                                <div class="btn-checkbox">
+                                    <input type="checkbox" id="all" name="check-all">
+                                    <label for="all">Select All </label>
+                                </div>
+                            </div>
+                            <div class="btn-show ml-auto">
+                                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">Show All</button>
+                            </div>
+                        </div>
+                        <label>Role Permissions:</label>
+                        <div class="accordion md-accordion mb-5" role="tablist" aria-multiselectable="true">
+                            {% if perms %}
+                            {% for key, perms_values in perms.items %}
+                            <div class="card">
+                                <div class="card-header" role="tab" id="heading1">
+                                    
+                                        <h5 class="mb-0">
+                                            <div class="checkbox btn-checkbox">
+                                                <input type="checkbox" name="" id="{{ key }}" class="parent" value="">
+                                                <label for="{{ key }}">{{ '_'|replace_tag:key|title }}</label>
+                                            </div>
+                                            <a class="collapsed" data-toggle="collapse" href="#collapse-{{key}}" aria-expanded="true" aria-controls="collapse-{{key}}">
+                                            <i class="fa fa-angle-down rotate-icon"></i>
+                                            </a>
+                                        </h5>                                    
+                                </div>
+                                <div id="collapse-{{key}}" class="collapse multi-collapse col-check" role="tabpanel" aria-labelledby="heading1">
+                                    <div class="card-body">
+                                        <div class="form-inline">
+                                            {% for perm_id, permissions in perms_values.items %}
+                                            <div class="btn-checkbox">
+                                                <input type="checkbox" name="permissions[]" class="child" id="permissions{{ perm_id }}" {% if perm_id in context.permission_arr %} checked="true" {% endif %} value="{{ perm_id }}">
+                                                <label for="permissions{{ perm_id }}">{{ permissions.name|title }}</label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            <div class="col-12 form-group">
+                                <button type="submit" id="role_submit" class="btn btn-lg btn-primary">Submit</button>
+                        </div>
+                        </div>
+                    </form>
+                    
+                </div>
+                <div class="col-xl-4">
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready(function() {
+  $("#roleSubmitForm").submit(function(e) {
+    $('.form-group').removeClass('has-error'); 
+    $('.error').remove(); 
+    $('#msg-group').html('');
+	$.ajax({
+            type: 'POST',
+             url: "{% url 'roles:edit-role' context.role_id %}",
+            data: new FormData(this), // our data object
+         enctype: 'multipart/form-data',
+           async: false,
+     contentType: false,
+           cache: false,
+     processData: false,
+        dataType: 'json', 
+      beforeSend: function( xhr ) {
+		$(".loader").show();
+		//$('#role_submit').attr('disabled', true);
+      }
+    })
+    .done(function(response) {
+       $(".loader").hide();
+       var focus_key = '';
+       if (response.success) { 
+           var focus_key = 'msg';
+           $('#roleSubmitForm')[0].reset(); 
+           $('#msg-group').append('<div class="alert alert-success text-success">'+response.msg+'</div>');
+           $('html, body').animate({ 
+              scrollTop:$('#'+focus_key+'-group').offset().top - ($(window).height() / 2)
+           }, 500, function() { 
+              $('#msg-group').focus();
+           });
+           setTimeout(function() {
+              window.location.href = "{% url 'roles:roles' %}";
+           }, 3000);
+       } 
+       else if (response.success==false) {  
+          var i = 0;
+          if ( (response.msg) && (response.msg!=undefined) ) { 
+             $('#msg-group').append('<div class="alert alert-danger text-danger error">'+response.msg+'</small>');
+             focus_key = 'msg';
+          }
+          else {
+            $.each(JSON.parse(response.errors), function(key, value) { 
+              if (i==0)
+                 focus_key = key;
+              
+              $('#'+key+'-group').addClass('has-error'); // add the error class to show red input
+              $('#'+key+'-group').append('<small class="error">' + value[0].message + '</small>');
+              ++i;
+            }); 
+            //~ $("input[name='mdm_token']").val(response.errors.get_csrf_hash); 
+          }
+          $('html, body').animate({ 
+            scrollTop:$('#'+focus_key+'-group').offset().top - ($(window).height() / 2)
+          }, 500, function() { 
+             $('#'+focus_key+'-group').focus();
+          });
+        }
+    });
+    event.preventDefault();
+  });
+ 
+  //~ $(".child").each(function() {
+    //~ if ($(this).prop('checked') == true) {
+        //~ $(this).parents('li.parent-list').find(':checkbox.parent').prop('checked', true);
+    //~ }
+  //~ });
+  $(".child").each(function() {
+    if ($(this).prop('checked') == true) {
+        $(this).parents('div').prev('.card-header').find(':checkbox.parent').prop('checked', true);
+    }
+  });
+    
+$(function () {
+    $('<p class="error text-sm text-red">The Role Name field is required.</p>').insertAfter($("#role_name")).hide();
+        
+    // check-uncheck all
+    $(document).on('change', 'input[id="all"]', function () {
+      $('.parent').prop("checked", this.checked); 
+      $('.child').prop("checked", this.checked);
+    });
+    
+    // check-uncheck all child on parent check-uncheck
+    $('.parent').on('click', function () {
+      $(this).parents('div').next('.col-check').find(':checkbox').prop('checked', this.checked);
+      //~ $(this).closest('ul li').find(':checkbox').prop('checked', this.checked);
+    });
+    
+    
+    // check-uncheck parent on check-uncheck child
+    $('.child').on('click', function () { 
+      $(this).parents('li.parent-list').find(':checkbox.parent').prop('checked', this.checked);
+    });
+    
+    
+});
+}); 
+</script>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="navbar-custom navbar-light">   
+    <div class="app-search">
+      <div class="col-12 form-group">
+          <p>Edit User</p>
+      </div>
+    </div>
+</div>
+<div class="containerfluid">
+   <div class="back-btn mt-3 mb-3"><a href="{% url 'users:users' subdomain_slug %}"><i class="ico back-icon"></i> Back</a></div>
+   <div class="devices-sec">
+      <div class="devices-content">
+        <div class="row">
+          <div class="col-xl-8">
+    
+            <form id="usersubmitForm" method="POST" action="{% url 'users:edit-user-profile' subdomain_slug id %}" autocomplete="off">
+               <div id="msg-group"></div>
+               {% csrf_token %}
+               <input type="hidden" name="user" value="{{ id }}">
+               <input type="hidden" name="filename" value="{{ logo }}">
+               
+               {% for field in form %}
+               
+               {% if field.name != 'user' and field.name != 'filename' and field.name != 'user_logo' %}
+               <div class="row">
+               <div class="col-12 form-group" id="{{ field.html_name }}-group">
+                     {{ field.errors }}
+                     {{ field.label_tag }} {{ field }}
+                     {% if field.help_text %}
+                     <small class="help">{{ field.help_text|safe }}</small>
+                     {% endif %}
+               </div>
+               </div>
+               {% endif %}
+               {% endfor %}
+               <div class="row">
+                <div class="col-12 form-group" id="user_logo-group" style="display: block;">
+                  <div class="box">
+                    <label for="id_user_logo">Brand Logo</label>
+                      <input type="file" name="user_logo" accept="image/*" id="id_user_logo" class="inputfile inputfile-6" data-multiple-caption="{count} files selected" multiple="" >
+                      <label for="id_user_logo"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg> Upload</strong></label>
+                      <small>Only jpg, jpeg, gif and png image type allowed. The image size should be less than 20kb.</small>
+                  </div>
+                  <div id="preview" class="m-b-sm">
+                    {% if logo %}
+                      <img src="{{ logo.url }}" class="img-responsive" >
+                    {% endif %}
+                  </div>
+                </div>
+               </div>
+                <div class="row col-12 form-group">
+               <input type="submit" name="user_submit" id="user_submit" class="btn btn-lg btn-primary" value="Submit"/>
+               </div> 
+            </form>
+          </div> 
+        </div> 
+      </div> 
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_js %}
+<script src='{% static "scripts/users/app.js" %}'></script>
+{% endblock additional_js %}
